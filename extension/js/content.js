@@ -2,24 +2,35 @@
 // add keywords when searching
 // fix dropdown positioning when it's too close to the edge (facebook chat search)
 
+require('twemoji');
+require('./modules/shortcodes.js');
+
+var Config = require('./modules/_config.js');
+var Utils = require('./modules/utils.js');
+var Dropdown = require('./modules/dropdown.js');
+var FocusWatcher = require('./modules/focus-watcher.js');
+var ElementWatcher = require('./modules/element-watcher.js');
+var StringBuffer = require('./modules/string-buffer.js');
+var Matcher = require('./modules/matcher.js');
+
 function replace(emoji, isViaUI) {
     var element = ElementWatcher.getElement();
     var search = StringBuffer.getBuffer();
 
-    if (BEHAVIOR.copy) {
-        clipWithSelection(emoji);
+    if (Config.behavior.copy) {
+        Utils.clipWithSelection(emoji);
     }
 
     if (element) {
         if (element.hasAttribute("contenteditable")) {
-            matchSelection(search, function (node, start, end) {
+            Utils.matchSelection(search, function (node, start, end) {
                 var selection = window.getSelection();
 
                 var range = selection.getRangeAt(selection.rangeCount - 1);
                 range.setStart(node, start);
                 range.setEnd(node, end);
 
-                if (!BEHAVIOR.copy) {
+                if (!Config.behavior.copy) {
                     range.deleteContents();
                     range.insertNode(document.createTextNode(emoji));
 
@@ -28,7 +39,7 @@ function replace(emoji, isViaUI) {
                 }
             });
         } else {
-            formReplace(element, search, emoji);
+            Utils.formReplace(element, search, emoji);
         }
 
         StringBuffer.reset();
@@ -76,7 +87,7 @@ var UI = (function () {
 })();
 
 FocusWatcher.onChange = function (element) {
-    element = isElementEmojiEligible(element)
+    element = Utils.isElementEmojiEligible(element)
         ? element
         : null;
 
@@ -126,7 +137,7 @@ StringBuffer.onBreak = function () {
 };
 
 StringBuffer.onChange = function (buffer) {
-    if (BEHAVIOR.active) {
+    if (Config.behavior.active) {
         Matcher.update(buffer);
     }
 };
@@ -155,3 +166,5 @@ Matcher.onMatch = replace;
 Matcher.onFlagsDown = function () {
     StringBuffer.reset();
 };
+
+require('./modules/state.js');

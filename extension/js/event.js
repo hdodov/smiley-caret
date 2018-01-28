@@ -1,3 +1,6 @@
+var EMOJI = require('../data/emoji.js');
+var Fuse = require('fuse.js');
+
 var EmojiFuse = new Fuse(EMOJI, {
     shouldSort: true,
     threshold: 0.3,

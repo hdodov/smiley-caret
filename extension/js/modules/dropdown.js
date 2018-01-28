@@ -1,7 +1,11 @@
+var Config = require('./_config.js');
+var Utils = require('./utils.js');
+var twemoji = require('twemoji');
+
 function Dropdown(parent) {
     this.items = {};
     this.selectedItem = null;
-    this.onChoose = NOOP;
+    this.onChoose = function () {};
     this.parent = parent || document.body;
 
     this.dropdown = document.createElement("div");
@@ -11,7 +15,7 @@ function Dropdown(parent) {
     this.container.classList.add("smiley-caret-container");
     this.dropdown.appendChild(this.container);
 
-    if (BEHAVIOR.copy) {
+    if (Config.behavior.copy) {
         this.container.classList.add("behavior-copy");
     }
 
@@ -131,9 +135,9 @@ function Dropdown(parent) {
         var offset = null;
 
         if (elem.hasAttribute("contenteditable")) {
-            offset = getContenteditableCaretBodyOffset();
+            offset = Utils.getContenteditableCaretBodyOffset();
         } else {
-            offset = getElementBodyOffset(elem);
+            offset = Utils.getElementBodyOffset(elem);
             offset.left += elem.clientWidth;
         }
 
@@ -184,3 +188,5 @@ function Dropdown(parent) {
         this.destroyed = true;
     }
 };
+
+module.exports = Dropdown;

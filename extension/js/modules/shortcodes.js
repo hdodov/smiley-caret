@@ -1,7 +1,9 @@
-window.SmileyCaretShortcodes = (function () {
+var Shortcodes = require('../../data/shortcodes.js');
+
+module.exports = (function () {
     var exports = {};
 
-    var _sets = getSets(SHORTCODES);
+    var _sets = getSets(Shortcodes);
 
     function getSets(list) {
         var sets = [];
@@ -30,15 +32,15 @@ window.SmileyCaretShortcodes = (function () {
     };
 
     exports.get = function (key) {
-        if (SHORTCODES[key]) {
-            return SHORTCODES[key];
+        if (Shortcodes[key]) {
+            return Shortcodes[key];
         } else {
             return null;
         }
     };
 
     exports.getAll = function () {
-        return SHORTCODES;
+        return Shortcodes;
     };
 
     return exports;

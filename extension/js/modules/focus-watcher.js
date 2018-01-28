@@ -1,9 +1,13 @@
 // Checks the currently focused element over short interval and dispatches
 // changes. The "focusin" event can't do the job because it can be cancelled.
 
-var FocusWatcher = (function () {
+module.exports = (function () {
+    var _config = {
+        interval: 250
+    };
+
     var exports = {
-        onChange: NOOP
+        onChange: function () {}
     };
 
     var _active = null,
@@ -14,7 +18,7 @@ var FocusWatcher = (function () {
             _active = document.activeElement;
             exports.onChange(_active);
         }
-    }, FOCUS_WATCHER_DELAY);
+    }, _config.interval);
 
     return exports;
 })();

@@ -1,9 +1,12 @@
-var Matcher = (function () {
+var Config = require('./_config.js');
+var Shortcodes = require('./shortcodes.js');
+
+module.exports = (function () {
     var exports = {
-        onMatch: NOOP,
-        onColoncodeUpdate: NOOP,
-        onFlagsUpdate: NOOP,
-        onFlagsDown: NOOP
+        onMatch: function () {},
+        onColoncodeUpdate: function () {},
+        onFlagsUpdate: function () {},
+        onFlagsDown: function () {}
     };
 
     var _flags = {},
@@ -45,7 +48,7 @@ var Matcher = (function () {
     }
 
     function isPartOfColoncode(buffer) {
-        var match = buffer.match(COLONCODE_REGEX);
+        var match = buffer.match(/^\:([a-z0-9\-]{3,})\:?$/);
 
         if (match !== null && match.length) {
             return match[1];
@@ -55,7 +58,7 @@ var Matcher = (function () {
     }
 
     function updateFlags(buffer) {
-        if (BEHAVIOR.coloncodes) {
+        if (Config.behavior.coloncodes) {
             if (buffer.length === 1 && buffer[0] === ":") {
                 _flags.colonStart = true;
             }
@@ -65,8 +68,8 @@ var Matcher = (function () {
             }
         }
 
-        if (BEHAVIOR.shortcodes) {
-            _flags.shortcode = SmileyCaretShortcodes.isPart(buffer) ? buffer : false;
+        if (Config.behavior.shortcodes) {
+            _flags.shortcode = Shortcodes.isPart(buffer) ? buffer : false;
         }
 
         exports.onFlagsUpdate(_flags);
@@ -79,7 +82,7 @@ var Matcher = (function () {
 
     exports.checkMatch = function (buffer) {
         if (_flags.shortcode) {
-            var shortcode = SmileyCaretShortcodes.get(_flags.shortcode);
+            var shortcode = Shortcodes.get(_flags.shortcode);
 
             if (shortcode !== null) {
                 exports.onMatch(shortcode);

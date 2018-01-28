@@ -1,8 +1,11 @@
-var StringBuffer = (function () {
+var Config = require('./_config.js');
+var Utils = require('./utils.js');
+
+module.exports = (function () {
     var exports = {
-        onChange: NOOP,
-        onClear: NOOP,
-        onBreak: NOOP
+        onChange: function () {},
+        onClear: function () {},
+        onBreak: function () {}
     };
 
     var _buffer = "";
@@ -33,7 +36,7 @@ var StringBuffer = (function () {
 
     exports.handleKeyPress = function (event) {
         change(function (buffer) {
-            if (event.which !== KEYS.space) {
+            if (event.which !== Config.keys.space) {
                 return buffer + event.key;
             } else {
                 return buffer;
@@ -43,8 +46,8 @@ var StringBuffer = (function () {
 
     exports.handleKeyDown = function (event) {
         if (
-            event.which === KEYS.enter ||
-            event.which === KEYS.space
+            event.which === Config.keys.enter ||
+            event.which === Config.keys.space
         ) {
             exports.onBreak(_buffer);
             clear();
@@ -52,12 +55,12 @@ var StringBuffer = (function () {
         }
 
         //                              selection is not a single character (ctrl+A)
-        if (isArrowKey(event.which) || !(window.getSelection().isCollapsed)) {
+        if (Utils.isArrowKey(event.which) || !(window.getSelection().isCollapsed)) {
             clear();
             return;
         }
 
-        if (event.which === KEYS.backspace) {
+        if (event.which === Config.keys.backspace) {
             change(function (buffer) {
                 return buffer.slice(0, -1);
             });

@@ -1,6 +1,6 @@
-var ElementWatcher = (function () {
+module.exports = (function () {
     var exports = {
-        onRebind: NOOP,
+        onRebind: function () {},
         events: {}
     };
 

@@ -1,8 +1,10 @@
+var Config = require('./_config.js');
+
 function updateActiveState() {
     chrome.storage.local.get("active", function (data) {
-        BEHAVIOR.active = (data.active !== false);
+        Config.behavior.active = (data.active !== false);
 
-        if (!BEHAVIOR.active) {
+        if (!Config.behavior.active) {
             StringBuffer.reset();
         }
     });
