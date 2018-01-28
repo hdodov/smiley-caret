@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smiley Caret</title>
+    <meta charset="utf-8">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+    <!-- EXTENSION -->
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+    <script src="../js/twemoji.min.js"></script>
+    <script src="../js/shortcodes.js"></script>
+    <script src="../js/script.js"></script>
+    <!-- EXTENSION -->
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="icon">
+                <img src="../img/icon-48.png" style="margin-left: -11px;">
+                <p class="title">Smiley Caret</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Testing field</h2>
+        <p>Type <code>:D</code> then press space, or type a colon <code>:</code> and some text after it (like <code>:grin</code>) to search:</p>
+        <div class="editor" contenteditable="true">
+            Type something in here! 😀
+        </div>
+
+        <h2>Shortcodes</h2>
+        <div class="row js-shortcodes"></div>
+
+        <h2>Tips</h2>
+        <div class="tips">
+            <div class="item">
+                <h3>Quick switch</h3>
+                <p>You can click on the extension icon to temporarily disable it:</p>
+                <img src="img/graph-active-inactive.png">
+            </div>
+
+            <div class="item">
+                <h3>Important fields</h3>
+                <p>You don’t have to turn off the extension whenever you’re typing in a password, email or telephone field. It automatically ignores such fields. This means your input won’t turn into emoji or cause the search dropdown to appear.</p>
+            </div>
+
+            <div class="item">
+                <h3>Facebook behavior</h3>
+                <p>
+                    Since Facebook has its own emoji conversion functionality (at least in direct messaging), the shortcodes part of Smiley Caret is turned off.<br><br>
+                    You can, however, search for emoji via the colon notation. The only difference is that the emoji will be copied to your clipboard when selected and you would have to paste it afterwards. That’s because directly manipulating the user input on Facebook can cause unexpected behavior.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "emoji",
+  "version": "1.0.0",
+  "description": "Emoji.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hristiyan Dodov",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-if": "^2.0.2",
+    "gulp-iife": "^0.3.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-useref": "^3.1.2"
+  },
+  "dependencies": {
+    "fuse.js": "^3.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^3.1.0",
+    "jquery": "^3.2.1",
+    "twemoji": "^2.5.0",
+    "unicode-emoji-parser": "^1.0.0"
+  }
+}

@@ -1,0 +1,127 @@
+$color-bg-1: #eef1f3;
+$color-bg-2: #f7f7f7;
+$color-border-1: #d5dce4;
+$border-radius-1: 4px;
+$trans-1: 0.25s ease;
+
+body {
+    padding-bottom: 120px;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+h2 {
+    margin-top: 50px;
+}
+
+h3 {
+    margin-top: 30px;
+}
+
+code {
+    margin: 0 2px;
+    padding: 2px;
+
+    background: #eee;
+    color: #777;
+    border-radius: 2px;
+}
+
+.container {
+    max-width: 800px;
+}
+
+header {
+    background: $color-bg-1;
+    border-bottom: 1px solid $color-border-1;
+
+    .icon {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+    }
+
+        .title {
+            display: inline-block;
+            margin: 0;
+            margin-left: 5px;
+            font-size: 22px;
+        }
+}
+
+.js-shortcodes {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: flex-start;
+
+    .shortcode {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        margin-bottom: 20px;
+
+        border-radius: $border-radius-1;
+        border: 1px solid $color-border-1;
+        overflow: hidden;
+
+        transition: all $trans-1;
+
+        &:hover {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.04);
+            transform: translate(0, -1px);
+        }
+
+        span, i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50%;
+            padding: 14px;
+            text-align: center;   
+        }
+
+        span {
+            background: $color-bg-1;
+            border-right: 1px solid $color-border-1;
+            font-size: 28px;
+        }
+
+        i {
+            background: $color-bg-2;
+        }
+
+            img {
+                max-width: 100%;
+                max-height: 36px;
+            }
+    }
+}
+
+.editor {
+    min-height: 8em;
+    padding: 12px 15px;
+
+    border: 1px solid $color-border-1;
+    border-radius: $border-radius-1;
+
+    transition: $trans-1;
+
+    &:focus {
+        outline: none;
+        border-color: #3376e0;
+    }
+}
+
+.tips {
+    .item {
+        max-width: 38em;
+        margin: 30px 0;
+
+        & + .item {
+            margin-top: 45px;
+        }
+    }
+}

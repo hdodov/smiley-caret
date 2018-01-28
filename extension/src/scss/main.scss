@@ -1,0 +1,132 @@
+.smiley-caret-dropdown {
+    font-size: 16px !important;
+
+    display: block;
+    margin-top: 10px;
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+
+    margin-left: 10px;
+    overflow: hidden;
+
+    position: absolute;
+        z-index: 2147483647 !important;
+
+    background: #eee;
+    box-shadow: 0px 10px 25px 0 rgba(0, 0, 0, 0.1);
+
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+
+    transition:
+        left 0.15s ease,
+        top 0.15s ease,
+        margin-top 0.3s ease,
+        visibility 0.2s ease-out,
+        opacity 0.2s ease-out;
+
+    &.is-visible {
+        margin-top: 0px;
+        visibility: visible;
+        pointer-events: auto;
+        opacity: 1;
+    }
+
+    &.is-fixed {
+        position: fixed;
+    }
+}
+
+.smiley-caret-container {
+    max-width: 16em;
+    max-height: 10.4em;
+    max-height: calc(10em + 4px);
+    overflow: auto;
+
+    div {
+        position: relative;
+        padding: 8px;
+        font-family: Helvetica, Arial, sans-serif !important;
+        font-size: 1em !important;
+        line-height: 1em;
+
+        & + div {
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        & > span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 18px;
+            height: 18px;
+            position: absolute;
+                top: 50%;
+                left: 0.5em;
+
+            transform: translateY(-50%);
+
+            i {
+                font-style: normal;
+                font-size: 16px;
+            }
+
+            img {
+                max-width: 100%;
+                max-height: 100%;
+            }
+
+            &.is-loaded {
+                i {
+                    display: none;
+                }
+            }
+
+            &:not(.is-loaded) {
+                img {
+                    display: none;
+                }
+            }
+        }
+
+        & > p {
+            margin: 0;
+            padding-left: 25px;
+
+            font-family: inherit !important;
+            font-size: 0.8em !important;
+            color: #000;
+            opacity: 0.7;
+        }
+
+        &.selected {
+            background-color: #3376e0;
+            cursor: pointer;
+
+            p {
+                opacity: 1;
+                color: #fff;
+            }
+        }
+    } /* div */
+
+    &.behavior-copy {
+        div {
+            p:before {
+                content: "copy:";
+                margin-right: 4px;
+                float: right;
+
+                font-weight: bold;
+                visibility: hidden;
+            }
+
+            &.selected p:before {
+                float: left;
+                visibility: visible;
+            }
+        }
+    }
+} /* #smiley-caret-container */
