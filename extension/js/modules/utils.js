@@ -5,24 +5,25 @@ module.exports = {
         if (
             !elem ||
             typeof elem.value !== "string" ||
-            typeof elem.selectionStart !== "number"
+            typeof elem.selectionEnd !== "number"
         ) {
             return false;
         }
 
         var value = elem.value,
-            endIndex = elem.selectionStart,
+            endIndex = elem.selectionEnd,
             startIndex = endIndex - search.length;
 
         if (
             startIndex >= 0 &&
             endIndex > startIndex &&
-            value.substr(startIndex, endIndex) === search
+            value.substring(startIndex, endIndex) === search
         ) {
-            var before = value.substr(0, startIndex);
-            var after = value.substr(endIndex);
+            var before = value.substring(0, startIndex);
+            var after = value.substring(endIndex);
 
             elem.value = before + replace + after;
+            elem.selectionEnd = before.length + replace.length;
         }
     },
 
