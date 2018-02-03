@@ -15,4 +15,5 @@ gulp.task('js', function () {
         .pipe(gulp.dest('test'))
 });
 
+gulp.watch('js/**/*', ['js']);
 gulp.task('default', ['js']);

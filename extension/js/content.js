@@ -5,86 +5,14 @@
 require('twemoji');
 require('./modules/shortcodes.js');
 
-var Config = require('./modules/_config.js');
 var Utils = require('./modules/utils.js');
-var Dropdown = require('./modules/dropdown.js');
+var UI = require('./modules/ui.js');
 var FocusWatcher = require('./modules/focus-watcher.js');
 var ElementWatcher = require('./modules/element-watcher.js');
 var StringBuffer = require('./modules/string-buffer.js');
 var Matcher = require('./modules/matcher.js');
-
-function replace(emoji, isViaUI) {
-    var element = ElementWatcher.getElement();
-    var search = StringBuffer.getBuffer();
-
-    if (Config.behavior.copy) {
-        Utils.clipWithSelection(emoji);
-    }
-
-    if (element) {
-        if (element.hasAttribute("contenteditable")) {
-            Utils.matchSelection(search, function (node, start, end) {
-                var selection = window.getSelection();
-
-                var range = selection.getRangeAt(selection.rangeCount - 1);
-                range.setStart(node, start);
-                range.setEnd(node, end);
-
-                if (!Config.behavior.copy) {
-                    range.deleteContents();
-                    range.insertNode(document.createTextNode(emoji));
-
-                    node.parentNode.normalize();
-                    selection.collapseToEnd();
-                }
-            });
-        } else {
-            Utils.formReplace(element, search, emoji);
-        }
-
-        StringBuffer.reset();
-    }
-}
-
-var UI = (function () {
-    var exports = {};
-
-    var _dropdown = null;
-
-    function exists() {
-        return (
-            _dropdown &&
-            _dropdown instanceof Dropdown &&
-            !_dropdown.destroyed
-        );
-    }
-
-    exports.createDropdown = function () {
-        if (!exists()) {
-            _dropdown = new Dropdown();
-            _dropdown.onChoose = function (emoji) {
-                replace(emoji, true);
-            };
-        }
-    };
-
-    exports.dropdownAction = function (callback) {
-        if (exists()) {
-            callback(_dropdown);
-        }
-    };
-
-    exports.removeDropdown = function () {
-        if (exists()) {
-            _dropdown.remove();
-            _dropdown = null;
-        }
-    };
-
-    exports.dropdownExists = exists;
-
-    return exports;
-})();
+var replace = require('./modules/replace.js');
+var State = require('./modules/State.js');
 
 FocusWatcher.onChange = function (element) {
     element = Utils.isElementEmojiEligible(element)
@@ -94,38 +22,29 @@ FocusWatcher.onChange = function (element) {
     ElementWatcher.changeElement(element);
 };
 
-ElementWatcher.onRebind = function () {
-    StringBuffer.reset();
-};
+ElementWatcher.on('rebind', StringBuffer.reset);
+ElementWatcher.element.on('keydown', StringBuffer.handleKeyDown);
 
-ElementWatcher.events = {
-    keydown: function (event) {
-        StringBuffer.handleKeyDown(event);
-    },
+ElementWatcher.element.on('keypress', function (event) {
+    StringBuffer.handleKeyPress(event);
 
-    keypress: function (event) {
-        StringBuffer.handleKeyPress(event);
-        
-        var self = this;
-        setTimeout(function () {
-            // Timeout needed because otherwise the positioning happens before
-            // the character is inserted.
-            UI.dropdownAction(function (dropdown) {
-                dropdown.alignTo(self);
-            });
-        }, 0);
-    },
-
-    keyup: function (event) {
-        var self = this;
+    setTimeout(function () {
+        // Timeout needed because otherwise the positioning happens before
+        // the character is inserted.
         UI.dropdownAction(function (dropdown) {
-            dropdown.alignTo(self);
+            dropdown.alignTo(event.target);
         });
-    },
+    }, 0);
+});
 
-    blur: StringBuffer.reset,
-    click: StringBuffer.reset
-};
+ElementWatcher.element.on('keyup', function (event, element) {
+    UI.dropdownAction(function (dropdown) {
+        dropdown.alignTo(event.target);
+    });
+});
+
+ElementWatcher.element.on('blur', StringBuffer.reset);
+ElementWatcher.element.on('click', StringBuffer.reset);
 
 StringBuffer.onClear = function () {
     UI.removeDropdown();
@@ -137,7 +56,8 @@ StringBuffer.onBreak = function () {
 };
 
 StringBuffer.onChange = function (buffer) {
-    if (Config.behavior.active) {
+    console.log(buffer);
+    if (State.getBehavior('active')) {
         Matcher.update(buffer);
     }
 };

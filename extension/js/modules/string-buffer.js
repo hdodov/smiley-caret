@@ -1,7 +1,8 @@
-var Config = require('./_config.js');
+var State = require('./State.js');
 var Utils = require('./utils.js');
+var Keys = require('./Keys.js');
 
-module.exports = (function () {
+StringBuffer = (function () {
     var exports = {
         onChange: function () {},
         onClear: function () {},
@@ -36,7 +37,7 @@ module.exports = (function () {
 
     exports.handleKeyPress = function (event) {
         change(function (buffer) {
-            if (event.which !== Config.keys.space) {
+            if (event.which !== Keys.codes.space) {
                 return buffer + event.key;
             } else {
                 return buffer;
@@ -46,8 +47,8 @@ module.exports = (function () {
 
     exports.handleKeyDown = function (event) {
         if (
-            event.which === Config.keys.enter ||
-            event.which === Config.keys.space
+            event.which === Keys.codes.enter ||
+            event.which === Keys.codes.space
         ) {
             exports.onBreak(_buffer);
             clear();
@@ -55,12 +56,12 @@ module.exports = (function () {
         }
 
         //                              selection is not a single character (ctrl+A)
-        if (Utils.isArrowKey(event.which) || !(window.getSelection().isCollapsed)) {
+        if (Keys.isArrowKey(event.which) || !(window.getSelection().isCollapsed)) {
             clear();
             return;
         }
 
-        if (event.which === Config.keys.backspace) {
+        if (event.which === Keys.codes.backspace) {
             change(function (buffer) {
                 return buffer.slice(0, -1);
             });
@@ -74,3 +75,11 @@ module.exports = (function () {
 
     return exports;
 })();
+
+State.on('behavior_change', function (key, value) {
+    if (key == 'active' && value == false) {
+        StringBuffer.reset();
+    }
+});
+
+module.exports = StringBuffer;

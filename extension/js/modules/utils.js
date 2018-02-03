@@ -1,4 +1,4 @@
-var Config = require('./_config.js');
+var fnTextareaCaretPosition = require('./textarea-caret-position.js');
 
 module.exports = {
     formReplace: function (elem, search, replace) {
@@ -53,6 +53,14 @@ module.exports = {
         return false;
     },
 
+    isElementEditable: function (elem) {
+        return (elem && (
+            elem.hasAttribute("contenteditable") ||
+            elem.tagName === "TEXTAREA" ||
+            elem.tagName === "INPUT"
+        ));
+    },
+
     isElementEmojiEligible: function (elem) {
         var forbidden = ["email", "password", "tel"]
         ,   type = elem.getAttribute("type")
@@ -63,14 +71,6 @@ module.exports = {
             forbidden.indexOf(type) == -1 &&
             forbidden.indexOf(name) == -1
         );
-    },
-
-    isElementEditable: function (elem) {
-        return (elem && (
-            elem.hasAttribute("contenteditable") ||
-            elem.tagName === "TEXTAREA" ||
-            elem.tagName === "INPUT"
-        ));
     },
 
     getElementBodyOffset: function (elem) {
@@ -104,25 +104,31 @@ module.exports = {
         return result;
     },
 
-    getContenteditableCaretBodyOffset: function () {
-        var selection = window.getSelection(),
-            range = selection.getRangeAt(selection.rangeCount - 1),
-            clonedRange = range.cloneRange();
+    getElementCaretOffset: function (elem) {
+        var offset = null;
 
-        var node = document.createElement("span");
-        clonedRange.insertNode(node);
+        if (elem.hasAttribute('contenteditable')) {
+            var selection = window.getSelection()
+            ,   range = selection.getRangeAt(selection.rangeCount - 1)
+            ,   clonedRange = range.cloneRange();
 
-        var offset = this.getElementBodyOffset(node);
+            var node = document.createElement('span');
+            clonedRange.insertNode(node);
 
-        var parent = node.parentNode;
-        parent.removeChild(node);
-        parent.normalize();
+            offset = this.getElementBodyOffset(node);
+
+            var parent = node.parentNode;
+            parent.removeChild(node);
+            parent.normalize();
+        } else {
+            offset = this.getElementBodyOffset(elem);
+
+            var caretOffset = fnTextareaCaretPosition(elem, elem.selectionEnd);
+            offset.top += caretOffset.top - elem.scrollTop;
+            offset.left += caretOffset.left;
+        }
 
         return offset;
-    },
-
-    isArrowKey: function (code) {
-        return code >= Config.keys.left && code <= Config.keys.down;
     },
 
     clipWithInput: function (text) {

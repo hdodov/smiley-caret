@@ -1,19 +1,42 @@
-var Config = require('./_config.js');
+var EventEmitter = require('event-emitter');
 
-function updateActiveState() {
-    chrome.storage.local.get("active", function (data) {
-        Config.behavior.active = (data.active !== false);
+var _behavior = {
+    active: true,
+    shortcodes: true,
+    coloncodes: true,
+    copy: false
+};
 
-        if (!Config.behavior.active) {
-            StringBuffer.reset();
+var State = {
+    getBehavior: function (key) {
+        return _behavior[key];
+    },
+
+    setBehavior: function (data, silent) {
+        for (var k in data) {
+            if (k in _behavior && data[k] !== _behavior[k]) {
+                _behavior[k] = data[k];
+
+                if (!silent) {
+                    this.emit("behavior_change", k, _behavior[k]);
+                }
+            }
         }
-    });
+    }
+};
+
+if (window.location.hostname.indexOf('facebook') !== -1) {
+    State.setBehavior({
+        copy: true,
+        shortcodes: false
+    }, true);
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, respond) {
-    if (request.id == "update_active_state") {
-        updateActiveState();
+    if (request.id == "update_behavior") {
+        State.setBehavior(request.data);
     }
 });
 
-updateActiveState();
+EventEmitter(State);
+module.exports = State;

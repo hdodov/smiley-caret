@@ -1,42 +1,79 @@
-module.exports = (function () {
-    var exports = {
-        onRebind: function () {},
-        events: {}
-    };
+var EventEmitter = require('event-emitter');
+var MONITORED_EVENTS = [
+    'keydown',
+    'keypress',
+    'keyup',
+    'blur',
+    'click'
+];
 
+function Element(domElement) {
+    this.domElement = domElement;
+    this.boundEvents = [];
+} Element.prototype = {
+    addEvent: function (key, callback) {
+        this.domElement.addEventListener(key, callback);
+        this.boundEvents.push([key, callback]);
+    },
+
+    clearEvents: function () {
+        for (var i = this.boundEvents.length - 1; i >= 0; i--) {
+            var event = this.boundEvents[i];
+
+            this.domElement.removeEventListener(event[0], event[1]);
+            this.boundEvents.splice(i, 1);
+        }
+    },
+
+    destroy: function () {
+        if (this.destroyed) return;
+
+        this.clearEvents();
+        this.domElement = null;
+        this.boundEvents = null;
+        this.destroyed = true;
+    }
+};
+
+var ElementWatcher = (function () {
     var _currentElem = null;
+    var domEmitter = EventEmitter();
 
-    function bindEvents(elem) {
-        for (var k in exports.events) {
-            if (typeof exports.events[k] === "function") {
-                elem.addEventListener(k, exports.events[k]);
-            }
+    function _initializeElement(element) {
+        for (var i = 0; i < MONITORED_EVENTS.length; i++) {
+            element.addEvent(MONITORED_EVENTS[i], function (event) {
+                domEmitter.emit(event.type, event);
+            });
         }
     }
 
-    function unbindEvents(elem) {
-        for (var k in exports.events) {
-            elem.removeEventListener(k, exports.events[k]);
-        }
-    }
+    exports.changeElement = function (domElement) {
+        var lastDomElement = null
+        ,   newDomElement = null;
 
-    exports.changeElement = function (newElement) {
         if (_currentElem) {
-            unbindEvents(_currentElem);
+            lastDomElement = _currentElem.domElement;
+            _currentElem.destroy();
             _currentElem = null;
         }
 
-        if (newElement) {
-            bindEvents(newElement);
-            _currentElem = newElement;
-
-            exports.onRebind();
+        if (domElement) {
+            _currentElem = new Element(domElement);
+            _initializeElement(_currentElem);
+            newDomElement = _currentElem.domElement;
         }
+        
+        exports.emit('rebind', newDomElement, lastDomElement);
     };
 
     exports.getElement = function () {
-        return _currentElem;
+        return (_currentElem && _currentElem.domElement);
     };
+
+    exports.element = domEmitter;
 
     return exports;
 })();
+
+EventEmitter(ElementWatcher);
+module.exports = ElementWatcher;

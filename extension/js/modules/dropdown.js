@@ -1,11 +1,11 @@
-var Config = require('./_config.js');
-var Utils = require('./utils.js');
+var EventEmitter = require('event-emitter');
 var twemoji = require('twemoji');
+var Utils = require('./utils.js');
+var State = require('./State.js');
 
 function Dropdown(parent) {
     this.items = {};
     this.selectedItem = null;
-    this.onChoose = function () {};
     this.parent = parent || document.body;
 
     this.dropdown = document.createElement("div");
@@ -15,7 +15,7 @@ function Dropdown(parent) {
     this.container.classList.add("smiley-caret-container");
     this.dropdown.appendChild(this.container);
 
-    if (Config.behavior.copy) {
+    if (State.getBehavior('copy')) {
         this.container.classList.add("behavior-copy");
     }
 
@@ -80,7 +80,7 @@ function Dropdown(parent) {
             this.selectedItem.smileyCaret &&
             this.selectedItem.smileyCaret.emoji
         ) {
-            this.onChoose(this.selectedItem.smileyCaret.emoji);
+            this.emit('choose', this.selectedItem.smileyCaret.emoji);
         }  
     },
 
@@ -132,14 +132,7 @@ function Dropdown(parent) {
     },
 
     alignTo: function (elem) {
-        var offset = null;
-
-        if (elem.hasAttribute("contenteditable")) {
-            offset = Utils.getContenteditableCaretBodyOffset();
-        } else {
-            offset = Utils.getElementBodyOffset(elem);
-            offset.left += elem.clientWidth;
-        }
+        var offset = Utils.getElementCaretOffset(elem);
 
         if (offset) {
             this.dropdown.style.left = offset.left + "px";
@@ -189,4 +182,5 @@ function Dropdown(parent) {
     }
 };
 
+EventEmitter(Dropdown.prototype);
 module.exports = Dropdown;

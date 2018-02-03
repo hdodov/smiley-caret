@@ -1,5 +1,5 @@
-var Config = require('./_config.js');
 var Shortcodes = require('./shortcodes.js');
+var State = require('./State.js');
 
 module.exports = (function () {
     var exports = {
@@ -58,7 +58,7 @@ module.exports = (function () {
     }
 
     function updateFlags(buffer) {
-        if (Config.behavior.coloncodes) {
+        if (State.getBehavior('coloncodes')) {
             if (buffer.length === 1 && buffer[0] === ":") {
                 _flags.colonStart = true;
             }
@@ -68,7 +68,7 @@ module.exports = (function () {
             }
         }
 
-        if (Config.behavior.shortcodes) {
+        if (State.getBehavior('shortcodes')) {
             _flags.shortcode = Shortcodes.isPart(buffer) ? buffer : false;
         }
 
