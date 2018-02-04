@@ -1,3 +1,8 @@
+// The user can only type in one element at once. We’re interested in
+// receiving all keyboard events, no matter the element. This module does
+// that. It handles the change from one element to another by internally
+// switching listeners and exposing a single emitter that emits events.
+
 var EventEmitter = require('event-emitter');
 var MONITORED_EVENTS = [
     'keydown',

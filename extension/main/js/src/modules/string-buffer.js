@@ -1,13 +1,10 @@
+var EventEmitter = require('event-emitter');
 var State = require('./State.js');
 var Utils = require('./utils.js');
-var Keys = require('./Keys.js');
+var Keys = require('./keys.js');
 
-StringBuffer = (function () {
-    var exports = {
-        onChange: function () {},
-        onClear: function () {},
-        onBreak: function () {}
-    };
+module.exports = (function () {
+    var exports = EventEmitter();
 
     var _buffer = "";
 
@@ -17,23 +14,23 @@ StringBuffer = (function () {
 
         if (
             _buffer !== cache &&
-            typeof _buffer === "string"
+            typeof _buffer == "string"
         ) {
             if (silent !== true) {
-                exports.onChange(_buffer, cache);
+                exports.emit('change', _buffer, cache);
             }
 
             if (_buffer.length === 0) {
-                exports.onClear();
+                exports.emit('clear');
             }
         }
     }
 
-    function clear() {
+    exports.clear = function () {
         change(function () {
             return "";
         }, true);
-    }
+    };
 
     exports.handleKeyPress = function (event) {
         change(function (buffer) {
@@ -50,14 +47,14 @@ StringBuffer = (function () {
             event.which === Keys.codes.enter ||
             event.which === Keys.codes.space
         ) {
-            exports.onBreak(_buffer);
-            clear();
+            exports.emit('break', _buffer);
+            exports.clear();
             return;
         }
 
         //                              selection is not a single character (ctrl+A)
         if (Keys.isArrowKey(event.which) || !(window.getSelection().isCollapsed)) {
-            clear();
+            exports.clear();
             return;
         }
 
@@ -68,7 +65,6 @@ StringBuffer = (function () {
         }
     };
 
-    exports.reset = clear;
     exports.getBuffer = function () {
         return _buffer;
     };
@@ -78,8 +74,6 @@ StringBuffer = (function () {
 
 State.on('behavior_change', function (key, value) {
     if (key == 'active' && value == false) {
-        StringBuffer.reset();
+        module.exports.clear();
     }
 });
-
-module.exports = StringBuffer;

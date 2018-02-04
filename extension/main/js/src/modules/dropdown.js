@@ -104,7 +104,7 @@ function Dropdown(parent) {
 
             var exists = false;
             for (var i = 0; i < list.length; i++) {
-                if (list[i][0] === k) {
+                if (list[i][1] === k) {
                     exists = true;
                     break;
                 }
@@ -116,8 +116,8 @@ function Dropdown(parent) {
         }
 
         for (var i = 0; i < list.length; i++) {
-            var name = list[i][0]
-            ,   emoji = list[i][1];
+            var emoji = list[i][0]
+            ,   name = list[i][1];
 
             if (this.items[name]) {
                 this.container.appendChild(this.items[name]);

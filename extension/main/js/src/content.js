@@ -2,9 +2,6 @@
 // add keywords when searching
 // fix dropdown positioning when it's too close to the edge (facebook chat search)
 
-require('twemoji');
-require('./modules/shortcodes.js');
-
 var Utils = require('./modules/utils.js');
 var UI = require('./modules/ui.js');
 var FocusWatcher = require('./modules/focus-watcher.js');
@@ -14,15 +11,15 @@ var Matcher = require('./modules/matcher.js');
 var replace = require('./modules/replace.js');
 var State = require('./modules/State.js');
 
-FocusWatcher.onChange = function (element) {
-    element = Utils.isElementEmojiEligible(element)
-        ? element
-        : null;
+FocusWatcher.on('change', function (element) {
+    if (Utils.isElementEmojiEligible(element)) {
+        ElementWatcher.changeElement(element);
+    } else {
+        ElementWatcher.changeElement(null);
+    }
+});
 
-    ElementWatcher.changeElement(element);
-};
-
-ElementWatcher.on('rebind', StringBuffer.reset);
+ElementWatcher.on('rebind', StringBuffer.clear);
 ElementWatcher.element.on('keydown', StringBuffer.handleKeyDown);
 
 ElementWatcher.element.on('keypress', function (event) {
@@ -43,32 +40,31 @@ ElementWatcher.element.on('keyup', function (event, element) {
     });
 });
 
-ElementWatcher.element.on('blur', StringBuffer.reset);
-ElementWatcher.element.on('click', StringBuffer.reset);
+ElementWatcher.element.on('blur', StringBuffer.clear);
+ElementWatcher.element.on('click', StringBuffer.clear);
 
-StringBuffer.onClear = function () {
+StringBuffer.on('clear', function () {
     UI.removeDropdown();
     Matcher.reset();
-};
+});
 
-StringBuffer.onBreak = function () {
+StringBuffer.on('break', function () {
     Matcher.checkMatch();
-};
+});
 
-StringBuffer.onChange = function (buffer) {
-    console.log(buffer);
+StringBuffer.on('change', function (buffer) {
     if (State.getBehavior('active')) {
         Matcher.update(buffer);
     }
-};
+});
 
-Matcher.onFlagsUpdate = function (flags) {
+Matcher.on('flags_update', function (flags) {
     if (flags.colonStart && !UI.dropdownExists()) {
         UI.createDropdown();
     }
-};
+});
 
-Matcher.onColoncodeUpdate = function (codes) {
+Matcher.on('coloncode_update', function (codes) {
     if (codes && codes.length) {
         UI.dropdownAction(function (dropdown) {
             dropdown.show();
@@ -79,12 +75,9 @@ Matcher.onColoncodeUpdate = function (codes) {
             dropdown.hide();
         });
     }
-};
+});
 
-Matcher.onMatch = replace;
-
-Matcher.onFlagsDown = function () {
-    StringBuffer.reset();
-};
+Matcher.on('match', replace);
+Matcher.on('flags_down', StringBuffer.clear);
 
 require('./modules/state.js');

@@ -1,14 +1,14 @@
-var EMOJI = require('../data/emoji.js');
+var ENTITIES = require('smiley-caret-data/entities');
 var Fuse = require('fuse.js');
 
-var EmojiFuse = new Fuse(EMOJI, {
+var EntitiesFuse = new Fuse(ENTITIES, {
     shouldSort: true,
     threshold: 0.3,
     location: 0,
     distance: 100,
     maxPatternLength: 32,
     minMatchCharLength: 1,
-    keys: [1]
+    keys: [1, 2]
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, respond) {
@@ -16,9 +16,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, respond) {
 
     var emoji = null;
 
-    for (var i = 0; i < EMOJI.length; i++) {
-        if (EMOJI[i][0] === request.coloncode) {
-            emoji = EMOJI[i][1];
+    for (var i = 0; i < ENTITIES.length; i++) {
+        if (ENTITIES[i][1] === request.coloncode) {
+            emoji = ENTITIES[i][0];
+            break;
         }
     }
 
@@ -28,8 +29,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, respond) {
 chrome.runtime.onMessage.addListener(function (request, sender, respond) {
     if (request.id !== "get_coloncodes") return;
 
-    var result = EmojiFuse.search(request.search);
-    console.log("Results for", request.search, "-", result.length);
+    var result = EntitiesFuse.search(request.search);
     respond(result);
 });
 

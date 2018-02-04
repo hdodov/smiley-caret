@@ -1,56 +1,65 @@
 var fnTextareaCaretPosition = require('./textarea-caret-position.js');
 
 module.exports = {
-    formReplace: function (elem, search, replace) {
+    searchInput: function (elem, search, callback) {
         if (
             !elem ||
-            typeof elem.value !== "string" ||
-            typeof elem.selectionEnd !== "number"
+            typeof elem.value != "string" ||
+            typeof elem.selectionEnd != "number"
         ) {
             return false;
         }
 
-        var value = elem.value,
-            endIndex = elem.selectionEnd,
-            startIndex = endIndex - search.length;
+        var value = elem.value
+        ,   endIndex = elem.selectionEnd
+        ,   startIndex = endIndex - search.length;
 
         if (
-            startIndex >= 0 &&
-            endIndex > startIndex &&
-            value.substring(startIndex, endIndex) === search
+            startIndex < 0 ||
+            endIndex < startIndex ||
+            value.substring(startIndex, endIndex) != search
         ) {
-            var before = value.substring(0, startIndex);
-            var after = value.substring(endIndex);
-
-            elem.value = before + replace + after;
-            elem.selectionEnd = before.length + replace.length;
+            return false;
         }
+
+        return callback({
+            start: startIndex,
+            end: endIndex,
+            before: value.substring(0, startIndex),
+            after: value.substring(endIndex)
+        });
     },
 
-    matchSelection: function (search, callback) {
+    searchSelection: function (search, callback) {
         var selection = window.getSelection();
 
         if (
-            selection &&
-            selection.focusNode &&
-            selection.focusNode.nodeValue
+            !selection ||
+            !selection.focusNode ||
+            !selection.focusNode.nodeValue
         ) {
-            var node = selection.focusNode;
-            var endIndex = selection.focusOffset;
-            var startIndex = endIndex - search.length;
-
-            if (
-                startIndex >= 0 &&
-                endIndex > startIndex &&
-                selection.rangeCount > 0 &&
-                node.nodeValue.substring(startIndex, endIndex) === search
-            ) {
-                callback(node, startIndex, endIndex);
-                return true;
-            }
+            return false;
         }
 
-        return false;
+        var node = selection.focusNode
+        ,   endIndex = selection.focusOffset
+        ,   startIndex = endIndex - search.length;
+
+        if (
+            startIndex < 0 ||
+            endIndex < startIndex ||
+            selection.rangeCount == 0 ||
+            node.nodeValue.substring(startIndex, endIndex) != search
+        ) {
+            return false;
+        }
+
+        return callback({
+            selection: selection,
+            node: node,
+            start: startIndex,
+            end: endIndex
+        });
     },
 
     isElementEditable: function (elem) {

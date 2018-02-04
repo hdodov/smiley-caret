@@ -2,8 +2,9 @@ var fs = require("fs");
 var path = require("path");
 var parse = require("unicode-emoji-parser");
 
-var SHORTCODES = require("./data/shortcodes.js");
 var CHARS = require("./data/chars.js");
+var KEYWORDS = require("./data/keywords.js");
+var SHORTCODES = require("./data/shortcodes.js");
 
 function getKey(name) {
     var key = (name + "").toLowerCase();
@@ -11,18 +12,39 @@ function getKey(name) {
     key = key.replace(/[^a-z0-9\-]/ig, "-"); // Convert strange characters to dashes.
     key = key.replace(/\-{2,}/g, "-"); // Remove more than two occurences of a dash.
     key = key.replace(/^\-|\-$/g, ""); // Remove starting and ending dashes.
-    key = key.replace(/-face-/ig, "-");
-    key = key.replace(/-face/ig, "");
+    key = key.replace(/-face(-)?/ig, "$1");
     key = key.replace(/-tone/ig, "");
 
     return key;
 }
 
-function writeFile(filepath, name, data) {
+function writeFile(filepath, data) {
     fs.writeFile(
         path.join(__dirname, filepath),
-        "var " + name + "=" + JSON.stringify(data) + ";"
+        "module.exports=" + JSON.stringify(data) + ";"
     );
+}
+
+function formatEntity(data) {
+    var keywords = [];
+
+    for (var k in KEYWORDS) {
+        if (
+            data.name.indexOf(k) != -1 ||
+            (
+                data.nameUnaltered &&
+                data.nameUnaltered.indexOf(k) != -1
+            )
+        ) {
+            keywords = keywords.concat(KEYWORDS[k]);
+        }
+    }
+
+    if (keywords.length) {
+        return [data.entity, data.name, keywords];
+    } else {
+        return [data.entity, data.name];
+    }
 }
 
 var output = [];
@@ -34,17 +56,25 @@ parse({
     path: "/Public/emoji/5.0/emoji-test.txt"
 }, function (emoji) {
     if (emoji.status === "fully-qualified") {
-        for (var k in SHORTCODES) {
-            if (SHORTCODES[k] === emoji.name) {
-                shortcodes[k] = emoji.icon;
+        for (var code in SHORTCODES) {
+            if (SHORTCODES[code] === emoji.name) {
+                shortcodes[code] = emoji.icon;
             }
         }
 
-        output.push([getKey(emoji.name), emoji.icon]);
+        output.push(formatEntity({
+            entity: emoji.icon,
+            name: getKey(emoji.name),
+            nameUnaltered: emoji.name
+        }));
     }
 }, function () {
-    for (var k in CHARS) {
-        output.push([k, CHARS[k]]);
+    for (var charName in CHARS) {
+        output.push(formatEntity({
+            entity: CHARS[charName],
+            name: "char-" + charName,
+            nameUnaltered: charName
+        }));
     }
 
     for (var k in SHORTCODES) {
@@ -54,6 +84,6 @@ parse({
         }
     }
 
-    writeFile("extension/data/emoji.js", "EMOJI", output);
-    writeFile("extension/data/shortcodes.js", "SHORTCODES", shortcodes);
+    writeFile("node_modules/smiley-caret-data/entities.js", output);
+    writeFile("node_modules/smiley-caret-data/shortcodes.js", shortcodes);
 });

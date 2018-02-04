@@ -1,13 +1,9 @@
+var EventEmitter = require('event-emitter');
 var Shortcodes = require('./shortcodes.js');
 var State = require('./State.js');
 
 module.exports = (function () {
-    var exports = {
-        onMatch: function () {},
-        onColoncodeUpdate: function () {},
-        onFlagsUpdate: function () {},
-        onFlagsDown: function () {}
-    };
+    var exports = EventEmitter();
 
     var _flags = {},
         _coloncodes = [];
@@ -16,12 +12,12 @@ module.exports = (function () {
         _flags.shortcode = false;
         _flags.colonStart = false;
         _flags.coloncode = false;
-        exports.onFlagsUpdate(_flags);
+        exports.emit('flags_update', _flags);
     }
 
     function updateColoncodes(data) {
         _coloncodes = data || [];
-        exports.onColoncodeUpdate(_coloncodes);
+        exports.emit('coloncode_update', _coloncodes);
     }
 
     function searchForColoncodes(buffer) {
@@ -72,7 +68,7 @@ module.exports = (function () {
             _flags.shortcode = Shortcodes.isPart(buffer) ? buffer : false;
         }
 
-        exports.onFlagsUpdate(_flags);
+        exports.emit('flags_update', _flags);
     }
 
     exports.reset = function () {
@@ -85,14 +81,14 @@ module.exports = (function () {
             var shortcode = Shortcodes.get(_flags.shortcode);
 
             if (shortcode !== null) {
-                exports.onMatch(shortcode);
+                exports.emit('match', shortcode);
             }
         }
 
         if (_flags.coloncode) {
             for (var i = 0; i < _coloncodes.length; i++) {
                 if (_coloncodes[i][0] === _flags.coloncode) {
-                    exports.onMatch(_coloncodes[i][1]);
+                    exports.emit('match', _coloncodes[i][1]);
                 }
             }
         }   
@@ -102,7 +98,7 @@ module.exports = (function () {
         updateFlags(buffer);
 
         if (flagsDown()) {
-            exports.onFlagsDown();
+            exports.emit('flags_down');
         } else {
             if (_flags.coloncode) {
                 searchForColoncodes(_flags.coloncode);
@@ -113,5 +109,6 @@ module.exports = (function () {
     };
 
     resetFlags();
+
     return exports;
 })();

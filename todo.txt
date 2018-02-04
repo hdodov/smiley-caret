@@ -1,0 +1,1 @@
+- improve skin tone searching; add default skin tone option and show only it. when searching, if you type `light` and `skin`, show light skin tone instead, if you type `medium`, `dark` and `skin` - show medium dark instead

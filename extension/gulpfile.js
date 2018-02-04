@@ -7,13 +7,13 @@ var uglify = require("gulp-uglify");
 var concat = require("gulp-concat");
 
 gulp.task('js', function () {
-    return gulp.src('js/*.js')
+    return gulp.src('main/js/src/*.js')
         .pipe(tap(function (file) {
             file.contents = browserify(file.path, {debug: true}).bundle();
         }))
 
-        .pipe(gulp.dest('test'))
+        .pipe(gulp.dest('main/js'))
 });
 
-gulp.watch('js/**/*', ['js']);
+gulp.watch('main/js/src/**/*', ['js']);
 gulp.task('default', ['js']);

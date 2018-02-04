@@ -1,6 +1,7 @@
 module.exports = {
-    "copyright-char": "©",
-    "trademark-char": "™",
-    "pound-char": "£",
-    "euro-char": "€"
+    "copyright": "©",
+    "trademark": "™",
+    "pound": "£",
+    "euro": "€",
+    "interpunct": "·"
 };

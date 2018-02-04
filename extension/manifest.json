@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
   "name": "Smiley Caret: Text to Emoji",
-  "version": "1.0.1",
+  "version": "1.1.0",
 
   "author": "Hristiyan Dodov",
-  "description": "Outputs emoji as you type. Converts shortcodes like “:)” to 🙂 and provides searching directly in the input field you’re typing in.",
+  "description": "Turns emoticons :) to emoji 🙂 and provides lookup directly in the input field you’re typing in.",
   "icons": {
     "16": "img/icon-16.png",
     "48": "img/icon-48.png",
@@ -20,7 +20,7 @@
 
   "background": {
     "scripts": [
-      "test/event.js"
+      "main/js/event.js"
     ]
   },
 
@@ -28,10 +28,10 @@
     {
       "run_at": "document_idle",
       "css": [
-        "css/main.css"
+        "main/css/style.css"
       ],
       "js": [
-        "test/content.js"
+        "main/js/content.js"
       ],
       "matches": [
         "file:///*",
