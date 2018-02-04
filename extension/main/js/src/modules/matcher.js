@@ -76,7 +76,7 @@ module.exports = (function () {
         updateColoncodes(null);
     };
 
-    exports.checkMatch = function (buffer) {
+    exports.checkMatch = function () {
         if (_flags.shortcode) {
             var shortcode = Shortcodes.get(_flags.shortcode);
 
@@ -87,8 +87,8 @@ module.exports = (function () {
 
         if (_flags.coloncode) {
             for (var i = 0; i < _coloncodes.length; i++) {
-                if (_coloncodes[i][0] === _flags.coloncode) {
-                    exports.emit('match', _coloncodes[i][1]);
+                if (_coloncodes[i][1] === _flags.coloncode) {
+                    exports.emit('match', _coloncodes[i][0]);
                 }
             }
         }   

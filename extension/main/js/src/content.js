@@ -48,9 +48,7 @@ StringBuffer.on('clear', function () {
     Matcher.reset();
 });
 
-StringBuffer.on('break', function () {
-    Matcher.checkMatch();
-});
+StringBuffer.on('break', Matcher.checkMatch);
 
 StringBuffer.on('change', function (buffer) {
     if (State.getBehavior('active')) {

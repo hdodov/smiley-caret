@@ -37,6 +37,12 @@ if (window.location.hostname.indexOf('facebook') !== -1) {
     }, true);
 }
 
+chrome.storage.local.get('active', function (data) {
+    module.exports.setBehavior({
+        active: !!data.active
+    });
+});
+
 chrome.runtime.onMessage.addListener(function (request, sender, respond) {
     if (request.id == "update_behavior") {
         module.exports.setBehavior(request.data);
