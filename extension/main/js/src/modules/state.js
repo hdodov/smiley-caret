@@ -37,7 +37,9 @@ if (window.location.hostname.indexOf('facebook') !== -1) {
     }, true);
 }
 
-chrome.storage.local.get('active', function (data) {
+chrome.storage.local.get({
+    active: true
+}, function (data) {
     module.exports.setBehavior({
         active: !!data.active
     });
