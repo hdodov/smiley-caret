@@ -1,5 +1,5 @@
 var ENTITIES = require('smiley-caret-data/entities');
-var Fuse = require('fuse.js');
+var Fuse = require('fuse.js'); // .js is in the package name
 
 var EntitiesFuse = new Fuse(ENTITIES, {
     shouldSort: true,

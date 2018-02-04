@@ -1,6 +1,6 @@
 var EventEmitter = require('event-emitter');
 var Shortcodes = require('./shortcodes.js');
-var State = require('./State.js');
+var State = require('./state.js');
 
 module.exports = (function () {
     var exports = EventEmitter();

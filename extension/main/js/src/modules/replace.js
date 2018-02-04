@@ -1,4 +1,4 @@
-var State = require('./State.js');
+var State = require('./state.js');
 var Utils = require('./utils.js');
 var ElementWatcher = require('./element-watcher.js');
 var StringBuffer = require('./string-buffer.js');

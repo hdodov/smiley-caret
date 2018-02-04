@@ -11,7 +11,6 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-if": "^2.0.2",
-    "gulp-iife": "^0.3.0",
     "gulp-uglify": "^3.0.0",
     "gulp-useref": "^3.1.2"
   },
@@ -19,10 +18,12 @@
     "browserify": "^15.2.0",
     "event-emitter": "^0.3.5",
     "fuse.js": "^3.2.0",
-    "gulp-concat": "^2.6.1",
+    "gulp-buffer": "0.0.2",
     "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-tap": "^1.0.1",
     "jquery": "^3.2.1",
+    "textarea-caret": "^3.0.2",
     "textarea-caret-position": "^0.1.1",
     "twemoji": "^2.5.0",
     "unicode-emoji-parser": "^1.0.0"

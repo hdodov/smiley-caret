@@ -1,5 +1,5 @@
 var Dropdown = require('./dropdown.js');
-var replace = require('./replace.js');
+var Replace = require('./replace.js');
 
 module.exports = (function () {
     var exports = {};
@@ -18,7 +18,7 @@ module.exports = (function () {
         if (!exists()) {
             _dropdown = new Dropdown();
             _dropdown.on('choose', function (emoji) {
-                replace(emoji, true);
+                Replace(emoji, true);
             });
         }
     };

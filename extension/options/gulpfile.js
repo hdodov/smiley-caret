@@ -6,7 +6,7 @@ var uglify = require("gulp-uglify");
 var sourcemaps = require("gulp-sourcemaps");
 
 gulp.task('js', function () {
-    return gulp.src('main/js/src/*.js')
+    return gulp.src('js/src/*.js')
         .pipe(tap(function (file) {
             file.contents = browserify(file.path, {debug: true}).bundle();
         }))
@@ -16,8 +16,8 @@ gulp.task('js', function () {
         .pipe(uglify())
         .pipe(sourcemaps.write("./"))
 
-        .pipe(gulp.dest('main/js'))
+        .pipe(gulp.dest('js'))
 });
 
-gulp.watch('main/js/src/**/*', ['js']);
+gulp.watch('js/src/**/*', ['js']);
 gulp.task('default', ['js']);

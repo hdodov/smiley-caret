@@ -7,26 +7,31 @@ var _behavior = {
     copy: false
 };
 
-var State = {
-    getBehavior: function (key) {
-        return _behavior[key];
-    },
+module.exports = (function () {
+    var exports = EventEmitter();
 
-    setBehavior: function (data, silent) {
+    exports.getBehavior = function (key) {
+        return _behavior[key];
+    };
+
+    exports.setBehavior = function (data, silent) {
         for (var k in data) {
             if (k in _behavior && data[k] !== _behavior[k]) {
                 _behavior[k] = data[k];
 
                 if (!silent) {
-                    this.emit("behavior_change", k, _behavior[k]);
+                    exports.emit("behavior_change", k, _behavior[k]);
                 }
             }
         }
-    }
-};
+    };
 
+    return exports;
+})();
+
+// Turn off replacing functionality because facebook is a pain in the ass.
 if (window.location.hostname.indexOf('facebook') !== -1) {
-    State.setBehavior({
+    module.exports.setBehavior({
         copy: true,
         shortcodes: false
     }, true);
@@ -34,9 +39,6 @@ if (window.location.hostname.indexOf('facebook') !== -1) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, respond) {
     if (request.id == "update_behavior") {
-        State.setBehavior(request.data);
+        module.exports.setBehavior(request.data);
     }
 });
-
-EventEmitter(State);
-module.exports = State;

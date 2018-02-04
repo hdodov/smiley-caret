@@ -1,5 +1,5 @@
 var EventEmitter = require('event-emitter');
-var twemoji = require('twemoji');
+var Twemoji = require('twemoji');
 var Utils = require('./utils.js');
 var State = require('./State.js');
 
@@ -34,7 +34,7 @@ function Dropdown(parent) {
         emojiElem.appendChild(emojiElemChar);
         emojiElem.appendChild(emojiElemImg);
 
-        var imageMarkup = twemoji.parse(emoji)
+        var imageMarkup = Twemoji.parse(emoji)
         ,   imageSrcMatch = /src\=\"(.*)\"/.exec(imageMarkup)
         ,   imageSrc = (imageSrcMatch && imageSrcMatch[1]);
         

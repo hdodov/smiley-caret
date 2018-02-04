@@ -1,4 +1,4 @@
-var fnTextareaCaretPosition = require('./textarea-caret-position.js');
+var getCaretCoordinates = require('textarea-caret');
 
 module.exports = {
     searchInput: function (elem, search, callback) {
@@ -132,7 +132,7 @@ module.exports = {
         } else {
             offset = this.getElementBodyOffset(elem);
 
-            var caretOffset = fnTextareaCaretPosition(elem, elem.selectionEnd);
+            var caretOffset = getCaretCoordinates(elem, elem.selectionEnd);
             offset.top += caretOffset.top - elem.scrollTop;
             offset.left += caretOffset.left;
         }

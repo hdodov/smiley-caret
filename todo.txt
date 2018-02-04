@@ -1,1 +1,3 @@
 - improve skin tone searching; add default skin tone option and show only it. when searching, if you type `light` and `skin`, show light skin tone instead, if you type `medium`, `dark` and `skin` - show medium dark instead
+- add browsing functionality - type `::search` to open a UI similar to emoji keyboards
+- type `::` and then space to output the last emoji used

@@ -1,5 +1,5 @@
 var EventEmitter = require('event-emitter');
-var State = require('./State.js');
+var State = require('./state.js');
 var Utils = require('./utils.js');
 var Keys = require('./keys.js');
 
