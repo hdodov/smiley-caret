@@ -76,7 +76,7 @@ module.exports = (function () {
         updateColoncodes(null);
     };
 
-    exports.checkMatch = function () {
+    exports.checkMatch = function (buffer) {
         if (_flags.shortcode) {
             var shortcode = Shortcodes.get(_flags.shortcode);
 

@@ -1,3 +1,6 @@
 - improve skin tone searching; add default skin tone option and show only it. when searching, if you type `light` and `skin`, show light skin tone instead, if you type `medium`, `dark` and `skin` - show medium dark instead
 - add browsing functionality - type `::search` to open a UI similar to emoji keyboards
 - type `::` and then space to output the last emoji used
+- use debugger to try and make it work in facebook
+- custom shortcodes where you choose what search and replace subject, so you can set it to replace `b` with 🅱️, double space with praying emoji, i18n with internationalization
+- improve positioning when dropdown is at the edge of the screen

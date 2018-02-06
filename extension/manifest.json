@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Smiley Caret: Text to Emoji",
-  "version": "1.1.0",
+  "version": "1.1.1",
 
   "author": "Hristiyan Dodov",
   "description": "Turns emoticons :) to emoji 🙂 and provides lookup directly in the input field you’re typing in.",
@@ -26,6 +26,7 @@
 
   "content_scripts": [
     {
+      "all_frames": true,
       "run_at": "document_idle",
       "css": [
         "main/css/style.css"

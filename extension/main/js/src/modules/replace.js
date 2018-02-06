@@ -28,8 +28,10 @@ module.exports = function (emoji) {
                 range.deleteContents();
                 range.insertNode(document.createTextNode(emoji));
 
-                result.node.parentNode.normalize();
-                result.node.parentElement.normalize();
+                if (result.node.parentNode) {
+                    result.node.parentNode.normalize();
+                }
+                
                 result.selection.collapseToEnd();
             }
         });
